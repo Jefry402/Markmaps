@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+.markmap-dark {
+  background: #27272a;
+  color: white;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script><script>(()=>{setTimeout(()=>{const{markmap:S,mm:Q}=window,$=new S.Toolbar;$.attach(Q);const I=$.render();I.setAttribute("style","position:absolute;bottom:20px;right:20px"),document.body.append(I)})})()</script><script>((l,U,M,R)=>{const N=l();window.mm=N.Markmap.create("svg#mindmap",(U||N.deriveOptions)(R),M),window.matchMedia("(prefers-color-scheme: dark)").matches&&document.documentElement.classList.add("markmap-dark")})(()=>window.markmap,null,{"content":"Activo de Capital","children":[{"content":"&#x1f3db;&#xfe0f; Definici&#xf3;n Esencial","children":[{"content":"Todo bien en poder del contribuyente","children":[],"payload":{"tag":"h3","lines":"2,3"}},{"content":"Conexi&#xf3;n con el negocio","children":[{"content":"Puede estar vinculado a la actividad comercial","children":[],"payload":{"tag":"li","lines":"4,5"}},{"content":"Puede ser ajeno al negocio (uso personal/inversi&#xf3;n)","children":[],"payload":{"tag":"li","lines":"5,7"}}],"payload":{"tag":"h3","lines":"3,4"}}],"payload":{"tag":"h2","lines":"1,2"}},{"content":"&#x1f6ab; Definici&#xf3;n por Exclusi&#xf3;n (Lo que NO es)","children":[{"content":"&#x1f4e6; Bienes de Cambio","children":[{"content":"Existencias comerciales (inventariables)","children":[],"payload":{"tag":"li","lines":"9,10"}},{"content":"Bienes para la venta a clientes","children":[],"payload":{"tag":"li","lines":"10,11"}},{"content":"<em>Criterio: Giro ordinario del negocio</em>","children":[],"payload":{"tag":"li","lines":"11,13"}}],"payload":{"tag":"h3","lines":"8,9"}},{"content":"&#x2699;&#xfe0f; Bienes Operativos","children":[{"content":"Bienes depreciables (maquinaria, equipos)","children":[],"payload":{"tag":"li","lines":"14,15"}},{"content":"Bienes agotables (recursos naturales)","children":[],"payload":{"tag":"li","lines":"15,16"}},{"content":"<em>Criterio: Desgaste por uso productivo</em>","children":[],"payload":{"tag":"li","lines":"16,18"}}],"payload":{"tag":"h3","lines":"13,14"}},{"content":"&#x1f4d1; Activos Corrientes","children":[{"content":"Cuentas por cobrar","children":[],"payload":{"tag":"li","lines":"19,20"}},{"content":"Notas por cobrar","children":[],"payload":{"tag":"li","lines":"20,21"}},{"content":"<em>Origen:</em>","children":[{"content":"Servicios prestados","children":[],"payload":{"tag":"li","lines":"22,23"}},{"content":"Venta de inventarios","children":[],"payload":{"tag":"li","lines":"23,24"}},{"content":"Venta de bienes del giro ordinario","children":[],"payload":{"tag":"li","lines":"24,26"}}],"payload":{"tag":"li","lines":"21,26"}}],"payload":{"tag":"h3","lines":"18,19"}}],"payload":{"tag":"h2","lines":"7,8"}},{"content":"&#x1f9e9; Atributos Ontol&#xf3;gicos","children":[{"content":"Naturaleza Residual","children":[{"content":"Se define por lo que queda tras filtrar la operaci&#xf3;n diaria","children":[],"payload":{"tag":"li","lines":"28,29"}}],"payload":{"tag":"h3","lines":"27,28"}},{"content":"Ubicuidad","children":[{"content":"Abarca tanto la esfera profesional como la privada","children":[],"payload":{"tag":"li","lines":"30,31"}}],"payload":{"tag":"h3","lines":"29,30"}},{"content":"Estabilidad","children":[{"content":"Excluye lo que circula (inventario) o lo que se consume (depreciables)","children":[],"payload":{"tag":"li","lines":"32,33"}}],"payload":{"tag":"h3","lines":"31,32"}}],"payload":{"tag":"h2","lines":"26,27"}}],"payload":{"tag":"h1","lines":"0,1"}},null)</script>
+</body>
+</html>
