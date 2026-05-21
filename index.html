@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impulsores de Valor - Profesión Legal Plus</title>
+    <script src="https://unpkg.com/force-graph"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+            overflow: hidden;
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #graph-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="graph-container"></div>
+
+    <!-- UI Overlay -->
+    <div class="fixed top-0 left-0 p-6 z-10 pointer-events-none">
+        <div
+            class="glass p-5 rounded-2xl pointer-events-auto max-w-sm shadow-2xl transition-all duration-300 transform hover:scale-[1.02]">
+            <h1
+                class="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent mb-1">
+                Impulsores de Valor
+            </h1>
+            <p class="text-slate-400 text-sm mb-4">La Profesión Legal Plus</p>
+
+            <div class="grid grid-cols-1 gap-2">
+                <div class="flex items-center space-x-3 text-xs">
+                    <div class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
+                    <span class="text-slate-400">Eje Central</span>
+                </div>
+                <div class="flex items-center space-x-3 text-xs">
+                    <div class="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.8)]"></div>
+                    <span class="text-slate-400">Pilares Estratégicos</span>
+                </div>
+                <div class="flex items-center space-x-3 text-xs">
+                    <div class="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></div>
+                    <span class="text-slate-400">Ideas Clave</span>
+                </div>
+                <div class="flex items-center space-x-3 text-xs">
+                    <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></div>
+                    <span class="text-slate-400">Citas de Sabiduría</span>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <input type="text" id="node-search" placeholder="Buscar concepto o autor..."
+                    class="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-slate-200">
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Panel -->
+    <div id="info-panel"
+        class="fixed top-0 right-0 p-6 h-full z-10 pointer-events-none opacity-0 translate-x-10 transition-all duration-500">
+        <div class="glass p-6 rounded-2xl pointer-events-auto w-80 h-full flex flex-col shadow-2xl">
+            <button id="close-panel" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div id="panel-content" class="overflow-y-auto pr-2 mt-4">
+                <!-- Content injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colors = {
+            core: '#22d3ee', // Cyan
+            category: '#a855f7', // Purple
+            item: '#fbbf24', // Amber
+            detail: '#34d399'  // Emerald
+        };
+
+        const icons = {
+            conocimiento: 'brain',
+            metodo: 'settings',
+            futuro: 'rocket',
+            proposito: 'compass',
+            empatia: 'heart',
+            honestidad: 'shield-check',
+            entorno: 'leaf',
+            interdisciplina: 'network',
+            energia: 'zap',
+            tecnologia: 'cpu'
+        };
+
+        const data = {
+            nodes: [
+                { id: 'root', label: 'Impulsores de Valor', type: 'core', info: 'Factores que incrementan el valor profesional en la abogacía moderna.', val: 28 },
+
+                // Categories
+                { id: 'conocimiento', label: 'Conocimiento', type: 'category', info: 'Generación continua como ventaja competitiva.', val: 22 },
+                { id: 'metodo', label: 'Método', type: 'category', info: 'La distinción profesional radica en el rigor del método.', val: 22 },
+                { id: 'futuro', label: 'Orientación al Futuro', type: 'category', info: 'Valoración de la capacidad de generar valor futuro.', val: 22 },
+                { id: 'proposito', label: 'Propósito', type: 'category', info: 'Misión y valores sólidos como guía.', val: 22 },
+                { id: 'empatia', label: 'Empatía', type: 'category', info: 'Conectar con el cliente y su industria.', val: 22 },
+                { id: 'honestidad', label: 'Honestidad', type: 'category', info: 'Integridad y reputación como activos clave.', val: 22 },
+                { id: 'entorno', label: 'Protección Entorno', type: 'category', info: 'Responsabilidad ética, ambiental e institucional.', val: 22 },
+                { id: 'interdisciplina', label: 'Interdisciplinariedad', type: 'category', info: 'Resolución de problemas mediante múltiples disciplinas.', val: 22 },
+                { id: 'energia', label: 'Energía', type: 'category', info: 'Pasión y optimismo como motor de productividad.', val: 22 },
+                { id: 'tecnologia', label: 'Tecnología', type: 'category', info: 'Facilitador para enfocarse en lo importante.', val: 22 },
+
+                // Knowledge Quotes & Items
+                { id: 'k1', label: 'Conocimiento = Commodity', type: 'item', info: 'El conocimiento pierde valor rápidamente.', val: 12 },
+                { id: 'q_nonaka', label: 'Ikujiro Nonaka', type: 'detail', info: '"En una economía donde la única certeza es la incertidumbre, la única fuente de ventaja competitiva sostenible es el conocimiento."', val: 10 },
+
+                // Method
+                { id: 'm1', label: 'Rigor Profesional', type: 'item', info: 'Desarrollar un estilo distintivo.', val: 12 },
+                { id: 'q_arquimedes', label: 'Arquímedes', type: 'detail', info: '"Dame una palanca y moveré el mundo" (Metáfora del método).', val: 10 },
+
+                // Future
+                { id: 'f1', label: 'Valor Futuro', type: 'item', info: 'Se paga por lo que se puede hacer, no por lo que se ha hecho.', val: 12 },
+                { id: 'q_roosevelt', label: 'Eleanor Roosevelt', type: 'detail', info: '"El futuro pertenece a quienes creen en la belleza de sus sueños."', val: 10 },
+
+                // Purpose
+                { id: 'p1', label: 'Misión y Misión', type: 'item', info: 'Atraer a otros hacia un propósito claro.', val: 12 },
+                { id: 'q_nietzsche', label: 'Friedrich Nietzsche', type: 'detail', info: '"El que tiene un porqué puede soportar casi cualquier cómo."', val: 10 },
+
+                // Empathy
+                { id: 'e1', label: 'Conexión Cliente', type: 'item', info: 'Elegir clientes con valores alineados.', val: 12 },
+                { id: 'q_covey', label: 'Stephen Covey', type: 'detail', info: '"Procura primero comprender, y después ser comprendido."', val: 10 },
+
+                // Honesty
+                { id: 'h1', label: 'Reputación y Ethos', type: 'item', info: 'La integridad tiene mayor retorno que la innovación técnica.', val: 12 },
+                { id: 'q_buffett', label: 'Warren Buffett', type: 'detail', info: '"Toma 20 años construir una reputación y cinco minutos arruinarla."', val: 10 },
+
+                // Environment
+                { id: 'en1', label: 'Ética institucional', type: 'item', info: 'Lucha contra la corrupción y respeto ambiental.', val: 12 },
+                { id: 'q_seattle', label: 'Jefe Seattle', type: 'detail', info: '"La tierra no nos pertenece; nosotros pertenecemos a la tierra."', val: 10 },
+
+                // Interdisciplinary
+                { id: 'i1', label: 'Trabajo en Equipo', type: 'item', info: 'Conocimientos de múltiples disciplinas.', val: 12 },
+                { id: 'q_commoner', label: 'Barry Commoner', type: 'detail', info: '"Todo está relacionado con todo lo demás."', val: 10 },
+
+                // Energy
+                { id: 'eg1', label: 'Factor Distintivo', type: 'item', info: 'La pasión es un factor ilimitado.', val: 12 },
+                { id: 'q_hegel', label: 'G.W.F. Hegel', type: 'detail', info: '"Nada en el mundo ha sido logrado sin pasión."', val: 10 },
+
+                // Technology
+                { id: 't1', label: 'Facilitador', type: 'item', info: 'No es un destructor, es un habilitador.', val: 12 },
+                { id: 'q_goodall', label: 'Jane Goodall', type: 'detail', info: '"La tecnología por sí sola no basta. También tenemos que ponerle corazón."', val: 10 }
+            ],
+            links: [
+                { source: 'root', target: 'conocimiento' }, { source: 'root', target: 'metodo' },
+                { source: 'root', target: 'futuro' }, { source: 'root', target: 'proposito' },
+                { source: 'root', target: 'empatia' }, { source: 'root', target: 'honestidad' },
+                { source: 'root', target: 'entorno' }, { source: 'root', target: 'interdisciplina' },
+                { source: 'root', target: 'energia' }, { source: 'root', target: 'tecnologia' },
+
+                { source: 'conocimiento', target: 'k1' }, { source: 'k1', target: 'q_nonaka' },
+                { source: 'metodo', target: 'm1' }, { source: 'm1', target: 'q_arquimedes' },
+                { source: 'futuro', target: 'f1' }, { source: 'f1', target: 'q_roosevelt' },
+                { source: 'proposito', target: 'p1' }, { source: 'p1', target: 'q_nietzsche' },
+                { source: 'empatia', target: 'e1' }, { source: 'e1', target: 'q_covey' },
+                { source: 'honestidad', target: 'h1' }, { source: 'h1', target: 'q_buffett' },
+                { source: 'entorno', target: 'en1' }, { source: 'en1', target: 'q_seattle' },
+                { source: 'interdisciplina', target: 'i1' }, { source: 'i1', target: 'q_commoner' },
+                { source: 'energia', target: 'eg1' }, { source: 'eg1', target: 'q_hegel' },
+                { source: 'tecnologia', target: 't1' }, { source: 't1', target: 'q_goodall' }
+            ]
+        };
+
+        const Graph = ForceGraph()
+            (document.getElementById('graph-container'))
+            .graphData(data)
+            .nodeId('id')
+            .nodeLabel('label')
+            .nodeVal('val')
+            .nodeColor(node => colors[node.type])
+            .linkColor(() => 'rgba(255, 255, 255, 0.08)')
+            .linkWidth(1.2)
+            .nodeCanvasObject((node, ctx, globalScale) => {
+                const label = node.label;
+                const fontSize = 12 / globalScale;
+                ctx.font = `${fontSize}px Inter`;
+
+                // Draw Glow Node
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.val / 2.5, 0, 2 * Math.PI, false);
+                ctx.fillStyle = colors[node.type];
+                ctx.shadowColor = colors[node.type];
+                ctx.shadowBlur = 15;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Draw Text with background for visibility
+                if (globalScale > 1.5) {
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.fillText(label, node.x, node.y + (node.val / 2) + 6);
+                }
+            })
+            .onNodeClick(node => {
+                showInfo(node);
+                Graph.centerAt(node.x, node.y, 800);
+                Graph.zoom(2.5, 800);
+            })
+            .onBackgroundClick(() => hideInfo());
+
+        function showInfo(node) {
+            const panel = document.getElementById('info-panel');
+            const content = document.getElementById('panel-content');
+
+            // Determine the category root for icon/visual
+            let categoryKey = node.id;
+            if (node.type === 'item' || node.type === 'detail') {
+                const link = data.links.find(l => (l.target.id || l.target) === node.id);
+                if (link) categoryKey = (link.source.id || l.source);
+            }
+
+            const iconName = icons[categoryKey] || 'star';
+
+            content.innerHTML = `
+                <div class="fade-in">
+                    <div class="mb-6 flex justify-center">
+                        <div class="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center shadow-inner" style="color: ${colors[node.type] || colors.core}">
+                            <i data-lucide="${iconName}" class="w-10 h-10"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <span class="px-2 py-0.5 rounded text-[9px] font-bold tracking-widest uppercase bg-slate-900/80 border border-slate-800" style="color: ${colors[node.type]}">
+                            ${node.type}
+                        </span>
+                    </div>
+
+                    <h2 class="text-2xl font-bold mb-4 leading-tight">${node.label}</h2>
+                    
+                    <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800/50 mb-6 font-light text-slate-300 leading-relaxed text-sm italic">
+                        ${node.info}
+                    </div>
+
+                    <h3 class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3">Conexiones</h3>
+                    <ul class="space-y-2">
+                        ${data.links
+                    .filter(l => (l.source.id || l.source) === node.id || (l.target.id || l.target) === node.id)
+                    .map(l => {
+                        const relId = (l.source.id || l.source) === node.id ? (l.target.id || l.target) : (l.source.id || l.source);
+                        const rel = data.nodes.find(n => n.id === relId);
+                        if (!rel) return '';
+                        return `
+                                    <li class="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800/40 cursor-pointer transition-all border border-transparent hover:border-slate-700/50" onclick="focusNode('${rel.id}')">
+                                        <div class="w-1.5 h-1.5 rounded-full" style="background-color: ${colors[rel.type]}"></div>
+                                        <span class="text-xs text-slate-400 group-hover:text-white">${rel.label}</span>
+                                    </li>
+                                `;
+                    }).join('')}
+                    </ul>
+                </div>
+            `;
+
+            panel.classList.remove('opacity-0', 'translate-x-10', 'pointer-events-none');
+            lucide.createIcons();
+        }
+
+        function hideInfo() {
+            document.getElementById('info-panel').classList.add('opacity-0', 'translate-x-10', 'pointer-events-none');
+        }
+
+        window.focusNode = (id) => {
+            const node = data.nodes.find(n => n.id === id);
+            if (node) {
+                showInfo(node);
+                Graph.centerAt(node.x, node.y, 1000);
+                Graph.zoom(3, 1000);
+            }
+        };
+
+        document.getElementById('close-panel').addEventListener('click', hideInfo);
+
+        document.getElementById('node-search').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            if (val.length < 2) return;
+            const match = data.nodes.find(n => n.label.toLowerCase().includes(val) || (n.info && n.info.toLowerCase().includes(val)));
+            if (match) focusNode(match.id);
+        });
+
+        lucide.createIcons();
+        window.addEventListener('resize', () => { Graph.width(window.innerWidth); Graph.height(window.innerHeight); });
+    </script>
+</body>
+
+</html>
